@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PinkJulieLand 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Mitr:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --pk: #ff80b5; --pk2: #ffb6d9; --pk3: #e8407a;
+  /* ปรับโทนสีพื้นหลังให้เข้มขึ้นและดูเนียนตา */
+  --bg: #0a0510; --bg2: #12091d; --bg3: #1a0d2a;
+  --txt2: rgba(255,255,255,0.7); --txt3: rgba(255,255,255,0.42);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Kanit', sans-serif;
+  background: var(--bg); color: #fff;
+  overflow-x: hidden;
+}
+
+/* Particles */
+#pts { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.pt { position: absolute; animation: ptUp linear infinite; opacity: 0; }
+@keyframes ptUp {
+0%   { transform: translateY(105vh); opacity: 0; }
+8%   { opacity: 0.45; }
+92%  { opacity: 0.45; }
+100% { transform: translateY(-8vh) rotate(360deg); opacity: 0; }
+}
+
+/* Topbar */
+.topbar {
+position: sticky; top: 0; z-index: 100;
+background: #0f071a;
+border-bottom: 2px solid var(--pk3);
+box-shadow: 0 2px 20px rgba(232,64,122,0.3);
+display: flex; align-items: center; justify-content: space-between;
+padding: 0 24px; height: 56px;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.ham {
+width: 38px; height: 38px;
+display: flex; flex-direction: column; align-items: center; justify-content: center;
+gap: 5px; cursor: pointer; padding: 5px;
+border-radius: 8px;
+border: 1.5px solid var(--pk);
+background: rgba(255,128,181,0.12);
+transition: background .2s, box-shadow .2s;
+flex-shrink: 0;
+}
+.ham:hover { background: rgba(255,128,181,0.24); box-shadow: 0 0 12px rgba(255,128,181,0.4); }
+.ham span {
+display: block; width: 18px; height: 2.5px;
+background: #fff; border-radius: 2px;
+transition: transform .3s, opacity .3s, width .3s;
+transform-origin: center;
+}
+.ham.open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+.ham.open span:nth-child(2) { opacity: 0; width: 0; }
+.ham.open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+.topbar-brand {
+font-family: 'Mitr', sans-serif;
+font-size: 20px; font-weight: 700;
+color: #ffffff;
+text-shadow: 0 0 16px rgba(255,128,181,0.7);
+letter-spacing: 0.5px;
+}
+.topbar-brand span { color: var(--pk); }
+
+.topbar-right { display: flex; gap: 8px; }
+.tb-link {
+padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600;
+text-decoration: none; color: #fff;
+border: 1px solid rgba(255,128,181,0.35);
+background: rgba(255,128,181,0.1);
+transition: all .2s;
+}
+.tb-link:hover { background: rgba(255,128,181,0.22); border-color: var(--pk); box-shadow: 0 0 10px rgba(255,128,181,0.3); }
+
+/* Drawer */
+.overlay {
+position: fixed; inset: 0; z-index: 200;
+background: rgba(0,0,0,0);
+pointer-events: none;
+transition: background .3s;
+}
+.overlay.open { background: rgba(0,0,0,0.6); pointer-events: all; }
+
+.drawer {
+position: fixed; top: 0; left: 0; z-index: 201;
+width: 220px; height: 100vh;
+background: linear-gradient(180deg, #0f071a, #1a0d2e, #0f071a);
+border-right: 2px solid rgba(255,128,181,0.38);
+box-shadow: 6px 0 30px rgba(0,0,0,0.5);
+display: flex; flex-direction: column; align-items: center;
+padding: 28px 0 20px;
+transform: translateX(-100%);
+transition: transform .32s cubic-bezier(.4,0,.2,1);
+}
+.drawer.open { transform: translateX(0); }
+
+.dr-av {
+width: 68px; height: 68px; border-radius: 50%;
+background: linear-gradient(135deg, var(--pk), var(--pk3));
+border: 3px solid var(--pk);
+display: flex; align-items: center; justify-content: center;
+font-size: 28px; margin-bottom: 7px;
+box-shadow: 0 0 22px rgba(255,128,181,0.5);
+animation: glow 3s ease-in-out infinite;
+}
+@keyframes glow {
+0%,100% { box-shadow: 0 0 22px rgba(255,128,181,0.5); }
+50%      { box-shadow: 0 0 40px rgba(255,128,181,0.85); }
+}
+.dr-name {
+font-size: 10px; font-weight: 700; color: var(--pk);
+letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px;
+}
+.dr-nav { width: 100%; }
+.dr-a {
+display: flex; align-items: center; gap: 11px;
+padding: 12px 22px;
+color: rgba(201,160,208,0.85); font-size: 14px; font-weight: 500;
+text-decoration: none; position: relative;
+transition: color .2s, background .2s;
+}
+.dr-a:hover { color: #fff; background: rgba(255,128,181,0.1); }
+.dr-a.on {
+color: #fff;
+background: linear-gradient(90deg, rgba(255,128,181,0.18), transparent);
+}
+.dr-a.on::before {
+content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+background: var(--pk); border-radius: 0 2px 2px 0;
+}
+.dr-a .ico { font-size: 15px; width: 18px; text-align: center; }
+
+.dr-qr {
+margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: 5px;
+}
+.qr-sq {
+width: 68px; height: 68px; background: #1a0d2e;
+border-radius: 8px; border: 2px solid var(--pk);
+display: flex; align-items: center; justify-content: center; font-size: 40px;
+}
+.qr-lbl { font-size: 10px; color: var(--pk2); font-weight: 700; letter-spacing: 2px; }
+
+/* Page */
+.page { position: relative; z-index: 1; min-height: 100vh; }
+
+/* Hero */
+.hero {
+background: linear-gradient(135deg, #1e0838 0%, #3a0e60 35%, #8e2a60 70%, #d95090 100%);
+padding: 36px 32px 28px;
+position: relative;
+min-height: 200px;
+display: flex; align-items: flex-end; justify-content: space-between;
+}
+.hero-txt { position: relative; z-index: 2; }
+.hero-tag {
+display: inline-block;
+background: rgba(0,0,0,0.3); backdrop-filter: blur(8px);
+border: 1px solid rgba(255,255,255,0.1);
+padding: 3px 13px; border-radius: 20px;
+font-size: 11px; color: #fff; margin-bottom: 8px;
+}
+.hero-title {
+font-family: 'Mitr', sans-serif;
+font-size: 52px; font-weight: 700; line-height: 1.1;
+background: linear-gradient(135deg, #fff 0%, #ffb6d9 50%, #ff80b5 100%);
+-webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+filter: drop-shadow(0 0 20px rgba(255,128,181,0.6)) drop-shadow(2px 3px 6px rgba(0,0,0,0.4));
+}
+.hero-sub { font-size: 12px; color: rgba(255,255,255,0.75); letter-spacing: 3px; margin-top: 5px; }
+.hero-deco { font-size: 68px; line-height: 1; position: relative; z-index: 2; align-self: flex-end; }
+
+.hero-wave {
+width: 100%; height: 32px; overflow: hidden; background: var(--bg); position: relative;
+}
+.hero-wave::before {
+content: ''; position: absolute; bottom: 0; left: 0; right: 0; top: 0;
+background: linear-gradient(135deg, #1e0838, #8e2a60, #d95090);
+border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+
+/* Content */
+.content { max-width: 860px; margin: 0 auto; padding: 24px 28px 50px; }
+
+/* Scroll offset for sticky topbar */
+[id] { scroll-margin-top: 66px; }
+
+.sh {
+display: flex; align-items: center; gap: 10px;
+background: linear-gradient(90deg, #1e0838 0%, #140628 60%, #0a0510 100%);
+border-left: 4px solid var(--pk);
+border-radius: 0 12px 12px 0;
+padding: 11px 18px; margin-bottom: 16px;
+}
+.sh .ico { font-size: 18px; }
+.sh h2 { font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.3px; }
+.sh span { font-size: 12px; color: var(--pk); font-weight: 500; }
+
+/* Cards */
+.cards { display: flex; gap: 14px; margin-bottom: 22px; }
+.card {
+flex: 1 1 0; min-width: 0;
+background: linear-gradient(135deg, #150a24, #0f071a);
+border: 1.5px solid rgba(255,128,181,0.15);
+border-radius: 14px; padding: 18px 16px;
+transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.card:hover { transform: translateY(-5px); border-color: var(--pk); box-shadow: 0 8px 28px rgba(255,128,181,0.25); }
+.c-ico { font-size: 36px; margin-bottom: 12px; filter: drop-shadow(0 0 6px rgba(255,128,181,0.5)); }
+.c-ttl { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.c-dsc { font-size: 12px; color: rgba(255,255,255,0.75); line-height: 1.65; }
+
+/* Box */
+.box {
+background: linear-gradient(135deg, #12091d, #0a0510);
+border: 1.5px solid rgba(255,128,181,0.12);
+border-radius: 14px; padding: 20px 22px; margin-bottom: 18px;
+}
+.box-label { font-size: 13px; font-weight: 700; color: var(--pk2); margin-bottom: 12px; }
+.badges { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.b-n { background: rgba(255,128,181,0.11); border: 1px solid rgba(255,128,181,0.28); color: var(--pk2); }
+.b-u { background: rgba(255,130,60,0.11); border: 1px solid rgba(255,130,60,0.28); color: #ffaa70; }
+.note { font-size: 11px; color: var(--txt3); }
+
+/* Steps */
+.steps { display: flex; flex-direction: column; gap: 14px; }
+.step { display: flex; gap: 13px; align-items: flex-start; }
+.sn {
+width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+background: linear-gradient(135deg, var(--pk3), var(--pk));
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; font-weight: 800;
+box-shadow: 0 2px 10px rgba(232,64,122,0.4);
+}
+.st { font-size: 13px; color: var(--txt2); line-height: 1.65; padding-top: 3px; }
+.st strong { color: var(--pk2); }
+
+/* Course */
+.course {
+display: flex; align-items: center; gap: 16px;
+background: linear-gradient(135deg, #0a1535, #102050);
+border: 1.5px solid rgba(100,160,255,0.2);
+border-radius: 14px; padding: 18px 20px; margin-bottom: 18px;
+text-decoration: none; color: #fff;
+transition: transform .25s, box-shadow .25s;
+}
+.course:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(100,150,255,0.25); }
+.c-emj { font-size: 36px; flex-shrink: 0; }
+.c-inf { flex: 1; min-width: 0; }
+.c-inf-t { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.c-inf-d { font-size: 12px; color: rgba(255,255,255,0.62); line-height: 1.5; }
+.c-price {
+background: linear-gradient(135deg, var(--pk), var(--pk3));
+padding: 8px 16px; border-radius: 20px;
+font-size: 16px; font-weight: 800; text-align: center; flex-shrink: 0;
+box-shadow: 0 4px 14px rgba(232,64,122,0.4);
+white-space: nowrap;
+}
+.c-price small { font-size: 10px; display: block; font-weight: 400; opacity: 0.85; }
+
+/* Rules */
+.rules-box {
+background: linear-gradient(135deg, #1a0812, #250a1d);
+border: 1.5px solid rgba(232,64,122,0.18);
+border-radius: 14px; padding: 18px 22px; margin-bottom: 18px;
+}
+.rule {
+display: flex; gap: 10px; align-items: flex-start;
+padding: 9px 0; border-bottom: 1px solid rgba(255,128,181,0.07);
+font-size: 13px; color: var(--txt2); line-height: 1.65;
+}
+.rule:last-child { border-bottom: none; }
+
+.warn {
+display: flex; align-items: flex-start; gap: 10px;
+background: #140e06; border: 1px solid rgba(255,200,50,0.2);
+border-left: 4px solid #cc9900; border-radius: 0 12px 12px 0;
+padding: 11px 16px; margin-bottom: 18px;
+font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.6;
+}
+
+/* Portfolio */
+.port-link {
+display: flex; align-items: center; gap: 14px;
+background: linear-gradient(135deg, #12091d, #0a0510);
+border: 1.5px solid rgba(255,128,181,0.15);
+border-radius: 14px; padding: 16px 20px; margin-bottom: 18px;
+text-decoration: none; color: #fff;
+transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.port-link:hover { border-color: var(--pk); box-shadow: 0 6px 22px rgba(255,128,181,0.22); transform: translateY(-2px); }
+.p-ico { font-size: 28px; }
+.p-txt { flex: 1; }
+.p-ttl { font-size: 13px; font-weight: 700; color: var(--pk2); margin-bottom: 3px; }
+.p-url { font-size: 11px; color: var(--txt3); word-break: break-all; }
+.p-arr { font-size: 18px; color: var(--pk); }
+
+/* Contact */
+.contact-box {
+background: linear-gradient(135deg, #0f0a20, #0a0510);
+border: 1.5px solid rgba(255,128,181,0.14);
+border-radius: 14px; padding: 20px 22px; margin-bottom: 18px;
+}
+.contact-hd { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; }
+.contact-hd h3 { font-size: 14px; font-weight: 700; color: var(--pk2); }
+.ct-link {
+display: flex; align-items: center; gap: 13px;
+padding: 11px 14px;
+background: rgba(255,128,181,0.05); border: 1px solid rgba(255,128,181,0.1);
+border-radius: 11px; text-decoration: none; color: #fff;
+font-size: 13px; margin-bottom: 10px;
+transition: background .2s, border-color .2s, transform .2s;
+}
+.ct-link:last-child { margin-bottom: 0; }
+.ct-link:hover { background: rgba(255,128,181,0.1); border-color: rgba(255,128,181,0.3); transform: translateX(4px); }
+.ct-ico { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.ct-inf { flex: 1; }
+.ct-t { font-weight: 700; font-size: 13px; }
+.ct-u { font-size: 11px; color: var(--txt3); margin-top: 1px; word-break: break-all; }
+.ct-arr { color: var(--pk); }
+
+/* Footer */
+.footer {
+background: #0a0510; border-top: 2px solid rgba(255,128,181,0.3);
+padding: 20px 28px;
+display: flex; flex-direction: column; align-items: center; gap: 12px;
+position: relative; z-index: 1;
+}
+.footer-text { font-size: 12px; color: rgba(255,128,181,0.55); text-align: center; }
+.ft-links { display: flex; gap: 12px; justify-content: center; }
+.ft-a {
+display: flex; align-items: center; gap: 6px;
+padding: 8px 20px; border-radius: 20px;
+border: 1px solid rgba(255,128,181,0.3);
+color: #fff; text-decoration: none; font-size: 13px; font-weight: 600;
+background: rgba(255,128,181,0.1);
+transition: all .2s;
+}
+.ft-a:hover { background: rgba(255,128,181,0.22); border-color: var(--pk); box-shadow: 0 0 12px rgba(255,128,181,0.3); }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--pk3); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="pts"></div>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="ham" id="hamBtn" onclick="toggleDrawer()">
+      <span></span><span></span><span></span>
+    </div>
+    <span class="topbar-brand">pink<span>julie</span>land</span>
+  </div>
+  <div class="topbar-right">
+    <a class="tb-link" href="https://www.facebook.com/apun.sukarsa.2024" target="_blank">📘 Facebook</a>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+
+<div class="drawer" id="drawer">
+  <div class="dr-av">🌸</div>
+  <div class="dr-name">KennyKUN</div>
+  <nav class="dr-nav">
+    <a class="dr-a on" data-target="top"><span class="ico">🏠</span><span>Home</span></a>
+    <a class="dr-a" data-target="services"><span class="ico">🎨</span><span>บริการ</span></a>
+    <a class="dr-a" data-target="steps"><span class="ico">📋</span><span>ขั้นตอน</span></a>
+    <a class="dr-a" data-target="rules"><span class="ico">📍</span><span>กฎร้าน</span></a>
+    <a class="dr-a" data-target="contact"><span class="ico">💬</span><span>ติดต่อ</span></a>
+  </nav>
+</div>
+
+<div class="page" id="top">
+  <div class="hero">
+    <div class="hero-txt">
+      <div class="hero-tag">💌 รับทำป้ายและบล็อค</div>
+      <div class="hero-title">kennykun</div>
+      <div class="hero-sub">✦ KENNYKUN DESIGN ✦</div>
+    </div>
+  </div>
+  <div class="hero-wave"></div>
+
+  <div class="content">
+    <div id="services">
+      <div class="sh"><span class="ico">🎨</span><h2>ราคางานป้าย</h2><span>— งานอื่นรบกวนสอบถามโดยตรง~</span></div>
+      <div class="cards">
+        <div class="card"><div class="c-ico">💜</div><div class="c-ttl">ป้ายแนวน่ารัก/มืด</div><div class="c-dsc">เริ่มต้น 69.-<br>เร่งงาน+20</div></div>
+        <div class="card"><div class="c-ico">🎮</div><div class="c-ttl">ป้ายคอสเจลลี่/คุณกิ้บ</div><div class="c-dsc">เริ่มต้น 89.-<br>เร่งงาน+40</div></div>
+        <div class="card"><div class="c-ico">🔮</div><div class="c-ttl">บล็อคตามบรีฟ</div><div class="c-dsc">เริ่มต้น 99.-<br>เร่งงานx2</div></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div class="box-label">⏰ ระยะเวลาดำเนินการ</div>
+      <div class="badges">
+        <div class="badge b-n">⏱️ ปกติภายใน 18 ชั่วโมง</div>
+        <div class="badge b-u">⚡ งานเร่ง 2-3 ชั่วโมง</div>
+      </div>
+      <div class="note">*หรือแล้วแต่คิวของวันนั้น</div>
+    </div>
+
+    <div id="steps" style="margin-bottom:18px;">
+      <div class="sh"><span class="ico">📋</span><h2>ขั้นตอนการสั่งงาน</h2><span>— อ่านด้วยนะคับบ</span></div>
+      <div class="box" style="margin-bottom:0;">
+        <div class="steps">
+          <div class="step"><div class="sn">1</div><div class="st"><strong>บรีฟงาน</strong> แจ้งรายละเอียดงานให้ครบถ้วน</div></div>
+          <div class="step"><div class="sn">2</div><div class="st">รอแจ้งยอด จึงจะ <strong>ชำระเงิน</strong> เช็คยอดโอนและชื่อบัญชีด้วยนะคับ <strong>Google Drive</strong></div></div>
+          <div class="step"><div class="sn">3</div><div class="st"><strong>รอรับงาน</strong> ส่งงานให้เช็คภายในเวลา</div></div>
+          <div class="step"><div class="sn">4</div><div class="st"><strong>กดเซฟงาน</strong> ใน google drive 💌</div></div>
+        </div>
+      </div>
+    </div>
+
+    <a class="course" href="https://itskenny.netlify.app/" target="_blank">
+      <div class="c-emj">📚</div>
+      <div class="c-inf">
+        <div class="c-inf-t">🌸 คอร์สสอน sweetycream v.2 </div>
+        <div class="c-inf-d">สำหรับคนที่เคยใช้บริการเท่านั้น ไม่จำกัดจำนวนผู้ทดลองแต่จำกัดเวลา 03/04/26 นับจากสลิป</div>
+      </div>
+      <div class="c-price">59 บาท<small>ราคาทดลอง</small></div>
+    </a>
+
+    <div id="rules">
+      <div class="sh"><span class="ico">📍</span><h2>กฎของร้าน</h2><span>— โปรดอ่านก่อนน้าา</span></div>
+      <div class="rules-box">
+        <div class="rule"><span>⚠️</span><span>ถ้าชำระเงินแล้ว <strong style="color:#ff9080">ทางร้านไม่คืนเงินทุกกรณี</strong> ดังนั้นตรวจสอบยอดโอนดี ๆ</span></div>
+        <div class="rule"><span>🤍</span><span>ห้ามเปลี่ยนบรีฟโทนสี<strong style="color:#ffb060">หลังเช็คงาน</strong> เรียบร้อย</span></div>
+        <div class="rule"><span>🚫</span><span>แก้ไขงานป้ายเอง เช่น ย้อมสี = <strong style="color:#ff9080">ปรับเริ่มต้น 1200</strong> ทุกกรณี</span></div>
+      </div>
+    </div>
+
+    <div class="warn"><span>⚠️</span><span>อ่านก่อนสั่งงานทุกครั้งนะค้าบ</span></div>
+
+    <div>
+      <div class="sh"><span class="ico">⭐</span><h2>เลือกของบรีฟงาน</h2><span>— google drive folder</span></div>
+      <a class="port-link" href="https://drive.google.com/drive/folders/1kwUdV_5iMh-3eQeRf86b64J0DNKT2O0Y?usp=drive_link" target="_blank">
+        <span class="p-ico">🖼️</span>
+        <div class="p-txt"><div class="p-ttl">click click !! </div><div class="p-url">to google drive folder</div></div>
+        <span class="p-arr">→</span>
+      </a>
+    </div>
+
+    <div id="contact">
+      <div class="contact-box">
+        <div class="contact-hd"><span style="font-size:17px;">📱</span><h3>ช่องทางติดต่อ</h3></div>
+        <a class="ct-link" href="https://www.facebook.com/apun.sukarsa.2024" target="_blank">
+          <div class="ct-ico" style="background:linear-gradient(135deg,#1877f2,#0855b3);">📘</div>
+          <div class="ct-inf"><div class="ct-t">Facebook : Apun Sukarsa</div><div class="ct-u">https://www.facebook.com/apun.sukarsa.2024</div></div>
+          <span class="ct-arr">→</span>
+        </a>
+        <a class="ct-link" href="https://lin.ee/WiLwmuS" target="_blank">
+          <div class="ct-ico" style="background:linear-gradient(135deg,#00b900,#009000);">💚</div>
+          <div class="ct-inf"><div class="ct-t">LINE : kennykunds // @658ttrvf</div><div class="ct-u">https://lin.ee/WiLwmuS</div></div>
+          <span class="ct-arr">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">✦ KENNYKUN DESIGN ✦ งานป้ายราคาน่ารัก 🌸</div>
+    <div class="ft-links">
+      <a class="ft-a" href="https://www.facebook.com/apun.sukarsa.2024" target="_blank">📘 Facebook</a>
+      <a class="ft-a" href="https://lin.ee/WiLwmuS" target="_blank">💚 LINE</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleDrawer() {
+    const isOpen = document.getElementById('drawer').classList.contains('open');
+    isOpen ? closeDrawer() : openDrawer();
+  }
+  function openDrawer() {
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('hamBtn').classList.add('open');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('hamBtn').classList.remove('open');
+  }
+
+  document.querySelectorAll('.dr-a[data-target]').forEach(a => {
+    a.addEventListener('click', () => {
+      const id = a.dataset.target;
+      const el = document.getElementById(id);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 66;
+        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+      }
+      document.querySelectorAll('.dr-a').forEach(n => n.classList.remove('on'));
+      a.classList.add('on');
+      setTimeout(closeDrawer, 120);
+    });
+  });
+
+  const P = document.getElementById('pts');
+  ['✦','★','♥','✿','◆','✧','♡','☆','◇','❋'].forEach(e => {
+    for (let j = 0; j < 2; j++) {
+      const d = document.createElement('div');
+      d.className = 'pt';
+      d.textContent = e;
+      d.style.cssText = `left:${Math.random()*100}vw;font-size:${8+Math.random()*8}px;color:${'#ff80b5,#ffb6d9,#e8407a,#c9a0d0'.split(',')[Math.floor(Math.random()*4)]};animation-duration:${10+Math.random()*13}s;animation-delay:${-Math.random()*25}s;`;
+      P.appendChild(d);
+    }
+  });
+</script>
+</body>
+</html>
+
+
